@@ -35,11 +35,11 @@ export const LargeInput: React.FC<Props> = ({
     <LargeInputStyled
       placeholder={placeholder}
       keyboardType="default"
-      multiline={true}
-      textBreakStrategy="highQuality"
       value={value}
       onChangeText={onChangeText}
       {...props}
+      // multiline={true}
+      // textBreakStrategy="highQuality"
     />
   );
 };

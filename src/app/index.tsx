@@ -6,10 +6,11 @@ import {
   Keyboard,
 } from "react-native";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import * as Yup from "yup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Formik } from "formik";
+import * as Yup from "yup";
 
 import { colors } from "@/styles/colors";
 import { H2DarkText, NotificationText } from "@/styles/global";
@@ -24,8 +25,6 @@ type LoginFormValues = {
 export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
-  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -73,11 +72,10 @@ export default function Login() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        style={[
-          styles.container,
-          isFocused ? { paddingBottom: 100 } : undefined,
-        ]}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled={true}
       >
         <H2DarkText style={{ fontSize: 30, color: colors.gray[600] }}>
           Digite seu nome
@@ -101,11 +99,8 @@ export default function Login() {
                 placeholder={"Nome de usuário"}
                 value={values.username}
                 onChangeText={handleChange("username")}
-                onBlur={() => {
-                  handleBlur("username");
-                  setIsFocused(false);
-                }}
-                onFocus={() => setIsFocused(true)}
+                onBlur={handleBlur("username")}
+                onFocus={() => {}}
               />
               {errors.username && touched.username && (
                 <NotificationText
@@ -120,7 +115,7 @@ export default function Login() {
             </>
           )}
         </Formik>
-      </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -130,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 40,
     backgroundColor: colors.gray[300],
   },
 });

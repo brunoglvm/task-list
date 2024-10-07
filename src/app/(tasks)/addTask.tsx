@@ -1,16 +1,13 @@
-import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from "react-native";
+import React from "react";
+import { StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useRouter } from "expo-router";
+
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 import { colors } from "@/styles/colors";
-import { SmallInput } from "@/components/Inputs";
+import { LargeInput } from "@/components/Inputs";
 import { ConfirmButton } from "@/components/Buttons";
 import { NotificationText } from "@/styles/global";
 import { useTasks } from "@/context/TaskContext";
@@ -25,15 +22,12 @@ export default function AddTask() {
   const router = useRouter();
   const { addTask } = useTasks();
 
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        style={[
-          styles.container,
-          isFocused ? { paddingTop: 80 } : { paddingTop: 160 },
-        ]}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        scrollEnabled={true}
       >
         <Formik
           initialValues={{ title: "" }}
@@ -52,15 +46,12 @@ export default function AddTask() {
             values,
           }) => (
             <>
-              <SmallInput
+              <LargeInput
                 value={values.title}
                 placeholder="Digite sua nova tarefa"
                 onChangeText={handleChange("title")}
-                onBlur={() => {
-                  handleBlur("title");
-                  setIsFocused(false);
-                }}
-                onFocus={() => setIsFocused(true)}
+                onBlur={handleBlur("title")}
+                onFocus={() => {}}
               />
               {errors.title && touched.title ? (
                 <NotificationText
@@ -74,7 +65,7 @@ export default function AddTask() {
             </>
           )}
         </Formik>
-      </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -82,8 +73,9 @@ export default function AddTask() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 80,
     backgroundColor: colors.gray[300],
   },
 });
